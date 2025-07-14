@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amith Matadha Gurumallapal - Resume</title>
+    <title>Data Science Analytics Specialist - Amith Matadha Gurumallapal</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -32,7 +32,7 @@
             transform: translateY(-2px); /* Slight lift on hover */
         }
 
-        /* Styles for the collapsible project details */
+        /* Styles for the collapsible project and experience details */
         .project-header {
             display: flex;
             justify-content: space-between;
@@ -45,7 +45,7 @@
         .arrow-icon.rotated {
             transform: rotate(90deg);
         }
-        .project-details {
+        .project-details { /* Reused for experience details as well */
             transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
             overflow: hidden;
             max-height: 0;
@@ -63,8 +63,8 @@
 
         <!-- Header: Name and Contact Info -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 rounded-md">Amith Matadha Gurumallapal</h1>
-            <p class="text-lg sm:text-xl text-gray-600 mb-4">Data Science Analytics Specialist/Team Lead | Bengaluru, Karnataka, India</p>
+            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 rounded-md">Data Science Analytics Specialist</h1>
+            <p class="text-lg sm:text-xl text-gray-600 mb-4">Amith Matadha Gurumallapal | Bengaluru, Karnataka, India</p>
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 text-gray-700">
                 <a href="mailto:amithmg6@gmail.com" class="flex items-center hover:text-indigo-500 transition duration-300 rounded-md">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
@@ -110,46 +110,51 @@
 
             <!-- Job 1: Data science analytics specialist -->
             <div class="experience-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Data science analytics specialist</h3>
-                <p class="text-gray-600">Accenture in India | Karnataka, India | June 2024 – Present (1 year 2 months)</p>
-                <ul class="list-none mt-2 space-y-1">
-                    <li class="bullet-point text-gray-700">Leading data science initiatives, focusing on advanced analytics and machine learning solutions.</li>
-                    <li class="bullet-point text-gray-700">Applying expertise in R and Python to develop and deploy robust data models.</li>
-                    <li class="bullet-point text-gray-700">Mentoring team members and contributing to platform migrations and enhancements.</li>
-                </ul>
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Data science analytics specialist</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600">Accenture in India | Karnataka, India | June 2024 – Present (1 year 2 months)</p>
+                    <p class="text-gray-700 leading-relaxed mt-2">
+                        As a Data Science Analytics Specialist, I am proficient in analyzing and resolving moderately complex data challenges. My approach involves developing innovative solutions, often by adapting and leveraging established methodologies. I am dedicated to understanding and contributing to the strategic objectives defined by senior management for our team.
+                        I collaborate primarily with my direct supervisor and engage effectively with peers and management, both within my organization and with clients. I consistently perform effectively under pressure, maintaining a steadfast commitment to quality and ensuring deadlines are met. While new assignments benefit from guidance, my decisions directly influence team outcomes. I possess the capability to manage small teams or lead individual work efforts, whether internally or for clients. I am highly adaptable and flexible, prepared to operate within rotational shifts as required, and I value expertise in cloud technologies.
+                    </p>
+                </div>
             </div>
 
             <!-- Job 2: Data Science Analytics Sr Analyst -->
             <div class="experience-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Data Science Analytics Sr Analyst</h3>
-                <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | July 2023 – June 2024 (1 year)</p>
-                <ul class="list-none mt-2 space-y-1">
-                    <li class="bullet-point text-gray-700">Contributed to data science projects, specializing in advanced analytics and reporting.</li>
-                    <li class="bullet-point text-gray-700">Utilized Google Cloud Platform (BigQuery, Vertex AI) for data processing and model development.</li>
-                    <li class="bullet-point text-gray-700">Supported a GCP helpline for 50+ users, enhancing problem-solving and platform expertise.</li>
-                </ul>
-            </div>
-
-            <!-- Job 3: Senior Analyst -->
-            <div class="experience-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Senior Analyst</h3>
-                <p class="text-gray-600">Accenture in India | Bangalore Urban, Karnataka, India | December 2021 – August 2023 (1 year 9 months)</p>
-                <ul class="list-none mt-2 space-y-1">
-                    <li class="bullet-point text-gray-700">Progressed to Senior Analyst, taking on increased responsibilities in data analysis and modeling.</li>
-                    <li class="bullet-point text-gray-700">Managed ETL projects and contributed to insightful reporting for various business units.</li>
-                    <li class="bullet-point text-gray-700">Focused on enhancing data quality and accessibility through robust analytical practices.</li>
-                </ul>
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Data Science Analytics Sr Analyst</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | December 2021 – June 2024 (2 years 7 months)</p>
+                    <p class="text-gray-700 leading-relaxed mt-2">
+                        As a Data Science Analytics Sr Analyst, I specialize in designing, analyzing, and developing machine learning models to address diverse business challenges across sectors such as retail, consumer goods, and manufacturing. I am committed to producing production-ready code, adhering strictly to coding standards, promoting code generalization, and implementing best development practices, fostering a culture of code discipline within the team. My expertise includes translating complex business requirements into precise analytical specifications.
+                        I play a senior role in projects, actively mentoring and reviewing the work of junior colleagues to ensure high standards. I take full ownership of both intermediate results and final outputs, prioritizing quality and timely delivery. I collaborate effectively with project leads to prepare comprehensive client and internal presentations.
+                        My technical proficiency is built on 3-5 years of experience with Machine Learning techniques, including Decision Trees, Gradient Boosting, and Random Forest. I possess extensive experience in data modeling gained through client projects, with a strong emphasis on data-driven techniques like exploratory data analysis and data pre-processing to solve real-world business problems. I am highly proficient in Python for data manipulation, visualization, and machine learning, with hands-on experience using libraries such as NumPy, Pandas, Matplotlib, and Scikit-learn. My skills also extend to SQL for data preparation, manipulation, and descriptive analysis, coupled with a solid understanding of statistical tests and distributions. I am adept at writing modular Python code and utilizing version control tools like Git. Furthermore, I have experience leveraging Google Cloud Platform (GCP) for data science workflows and am proficient in R programming for statistical analysis and data visualization.
+                        I am a strong learner, highly adaptable, and innovative, with a proven aptitude for analytics and problem-solving. I excel at leading data science projects while working collaboratively with junior team members. My communication skills are exceptional, enabling me to convey complex technical concepts clearly to business audiences. I am deeply committed to delighting customers, taking initiative, building trust, and fostering collaborative environments. My experience includes working effectively within global teams across different time zones and handling large datasets, often billions of rows. My background typically includes a Bachelor's or Master's degree in technology, engineering, or a quantitative field, with relevant coursework and professional certifications in Machine Learning.
+                    </p>
+                </div>
             </div>
 
             <!-- Job 4: Analytics and modeling analyst -->
             <div class="experience-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Analytics and modeling analyst</h3>
-                <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | March 2017 – December 2021 (4 years 10 months)</p>
-                <ul class="list-none mt-2 space-y-1">
-                    <li class="bullet-point text-gray-700">Began journey in data analytics, building a strong foundation in EDA and time series forecasting.</li>
-                    <li class="bullet-point text-gray-700">Developed classification models and supported various analytical initiatives.</li>
-                    <li class="bullet-point text-gray-700">Gained comprehensive experience across the entire data lifecycle.</li>
-                </ul>
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Analytics and modeling analyst</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | March 2017 – December 2021 (4 years 10 months)</p>
+                </div>
             </div>
         </section>
 
@@ -301,7 +306,7 @@
 
     <script>
         function toggleProjectDetails(headerElement) {
-            const projectItem = headerElement.closest('.project-item');
+            const projectItem = headerElement.closest('.project-item, .experience-item');
             const detailsElement = projectItem.querySelector('.project-details');
             const arrowIcon = headerElement.querySelector('.arrow-icon');
 
