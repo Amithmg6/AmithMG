@@ -28,6 +28,34 @@
             color: #6366f1;
             font-weight: bold;
         }
+        .mosaic-item:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+        /* Styles for the collapsible project details */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+        .arrow-icon.rotated {
+            transform: rotate(90deg);
+        }
+        .project-details {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+        .project-details.expanded {
+            max-height: 500px; /* Adjust as needed for content height */
+            opacity: 1;
+            margin-top: 0.5rem; /* Add some space when expanded */
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8 md:p-12 lg:p-16">
@@ -180,26 +208,75 @@
 
             <!-- Project 1: Tweet Sentiment Analysis -->
             <div class="project-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Tweet Sentiment Analysis: A Machine Learning Project</h3>
-                <p class="text-gray-600 mb-1">Technologies: Python (NumPy, NLTK, Flask), HTML, CSS (Tailwind CSS), JavaScript, GitHub Pages, Render</p>
-                <p class="text-gray-700 leading-relaxed">
-                    Developed a machine learning model to classify tweet sentiments (positive, negative, neutral) using a custom logistic regression. Achieved approximately 99.42% accuracy by implementing custom sigmoid, cost, and gradient descent functions, and rigorous data preprocessing. The project demonstrates robust sentiment assessment capabilities.
-                </p>
-                <a href="https://github.com/Amithmg6/tweet-sentiment-frontend" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
-                <span class="mx-2 text-gray-400">|</span>
-                <a href="https://amithmg6.github.io/tweet-sentiment-backend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Tweet Sentiment Analysis: A Machine Learning Project</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600 mb-1">Technologies: Python (NumPy, NLTK, Flask), HTML, CSS (Tailwind CSS), JavaScript, GitHub Pages, Render</p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Developed a machine learning model to classify tweet sentiments (positive, negative, neutral) using a custom logistic regression. Achieved approximately 99.42% accuracy by implementing custom sigmoid, cost, and gradient descent functions, and rigorous data preprocessing. The project demonstrates robust sentiment assessment capabilities.
+                    </p>
+                    <a href="https://github.com/Amithmg6/tweet-sentiment-frontend" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
+                    <span class="mx-2 text-gray-400">|</span>
+                    <a href="https://amithmg6.github.io/tweet-sentiment-backend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
+                </div>
             </div>
 
             <!-- Project 2: Fake News Classifier Using NLP -->
             <div class="project-item rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Fake News Classifier Using NLP</h3>
-                <p class="text-gray-600 mb-1">Technologies: Python (re, pandas, seaborn, NLTK, Scikit-learn: TfidfVectorizer, CountVectorizer, train_test_split, MultinomialNB, RandomForestClassifier, KNeighborsClassifier, accuracy_score, confusion_matrix), pickle</p>
-                <p class="text-gray-700 leading-relaxed">
-                    The proliferation of fake news has become a significant societal challenge, influencing public opinion and eroding trust in media. This project aims to combat this issue by building a machine learning model, powered by Natural Language Processing (NLP), to classify news articles as "real" or "fake". By analyzing textual patterns, linguistic styles, and content characteristics, the model will learn to identify deceptive content, offering a crucial tool for media literacy and information verification.
-                </p>
-                <a href="https://github.com/Amithmg6/fake-news-classifier" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
-                <span class="mx-2 text-gray-400">|</span>
-                <a href="https://amithmg6.github.io/fake-news-frontend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Fake News Classifier Using NLP</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600 mb-1">Technologies: Python (re, pandas, seaborn, NLTK, Scikit-learn: TfidfVectorizer, CountVectorizer, train_test_split, MultinomialNB, RandomForestClassifier, KNeighborsClassifier, accuracy_score, confusion_matrix), pickle</p>
+                    <p class="text-gray-700 leading-relaxed">
+                        The proliferation of fake news has become a significant societal challenge, influencing public opinion and eroding trust in media. This project aims to combat this issue by building a machine learning model, powered by Natural Language Processing (NLP), to classify news articles as "real" or "fake". By analyzing textual patterns, linguistic styles, and content characteristics, the model will learn to identify deceptive content, offering a crucial tool for media literacy and information verification.
+                    </p>
+                    <a href="https://github.com/Amithmg6/fake-news-classifier" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
+                    <span class="mx-2 text-gray-400">|</span>
+                    <a href="https://amithmg6.github.io/fake-news-frontend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
+                </div>
+            </div>
+
+            <!-- New Project: Toxic comments classifier -->
+            <div class="project-item rounded-md p-2">
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Toxic comments classifier</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-600 mb-1">Technologies: import string, nlp_utils, contractions, nltk.corpus (stopwords), nltk.stem (WordNetLemmatizer, PorterStemmer, LancasterStemmer, SnowballStemmer), nltk.tokenize (word_tokenize, sent_tokenize), wordcloud (WordCloud, STOPWORDS, ImageColorGenerator), PIL (Image), sklearn (preprocessing, SelectFromModel, model_selection, metrics, linear_model, neighbors, naive_bayes, svm, ensemble, feature_extraction), nltk (ngrams, bigrams, trigrams)</p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Online platforms often struggle with the prevalence of toxic comments, which include anything from rude and disrespectful remarks to threats and identity attacks. This project addresses this challenge by developing a Natural Language Processing (NLP) model capable of classifying different types of toxicity in user comments. The goal is to build a robust system that can automatically identify and categorize toxic content, enabling platforms to better moderate discussions and foster healthier online communities.
+                    </p>
+                    <a href="https://amithmg6.github.io/toxic-txt-clssify-frontend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Blogs and Websites -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Blogs and Websites</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Blog/Website 1 -->
+                <a href="https://amithmg6.github.io/llm-comparisons-learning/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
+                    llm-comparisons-learning
+                </a>
+
+                <!-- Blog/Website 2 -->
+                <a href="https://amithmg6.github.io/AmithLanguageLab/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
+                    stemming-explorer
+                </a>
+
+                <!-- Add more <a> tags here for additional blogs/websites -->
             </div>
         </section>
 
@@ -221,5 +298,18 @@
         </footer>
 
     </div>
+
+    <script>
+        function toggleProjectDetails(headerElement) {
+            const projectItem = headerElement.closest('.project-item');
+            const detailsElement = projectItem.querySelector('.project-details');
+            const arrowIcon = headerElement.querySelector('.arrow-icon');
+
+            if (detailsElement && arrowIcon) {
+                detailsElement.classList.toggle('expanded');
+                arrowIcon.classList.toggle('rotated');
+            }
+        }
+    </script>
 </body>
 </html>
