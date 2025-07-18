@@ -18,7 +18,7 @@
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
-        .experience-item, .project-item {
+        .experience-item, .project-item, .certification-item { /* Added .certification-item */
             border-left: 4px solid #a78bfa; /* Purple border for items */
             padding-left: 1rem;
             margin-bottom: 1.5rem;
@@ -33,7 +33,7 @@
         }
 
         /* Styles for the collapsible project and experience details */
-        .project-header {
+        .project-header { /* Reused for certification headers as well */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -45,16 +45,22 @@
         .arrow-icon.rotated {
             transform: rotate(90deg);
         }
-        .project-details { /* Reused for experience details as well */
+        .project-details { /* Reused for experience and certification details as well */
             transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
             overflow: hidden;
             max-height: 0;
             opacity: 0;
         }
         .project-details.expanded {
-            max-height: 500px; /* Adjust as needed for content height */
+            max-height: 500px; /* Default expanded height */
             opacity: 1;
             margin-top: 0.5rem; /* Add some space when expanded */
+        }
+        /* Specific styles for scrollable content when expanded */
+        .project-details.expanded.scrollable-content {
+            max-height: 300px; /* Lower max-height for scrollable content */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Space for scrollbar */
         }
     </style>
 </head>
@@ -286,6 +292,11 @@
                     Vector DBs
                 </a>
 
+                <!-- Blog/Website 4 -->
+                <a href="https://amithmg6.github.io/ml-explorer/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
+                    ML Algorithms Explorer
+                </a>
+
                 <!-- Add more <a> tags here for additional blogs/websites -->
             </div>
         </section>
@@ -293,13 +304,135 @@
         <!-- Certifications Section -->
         <section class="mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Certifications</h2>
-            <ul class="list-disc list-inside text-gray-700 space-y-1">
-                <li class="rounded-md p-1"><strong>Joining Data in SQL</strong> (Issuing Body, Year)</li>
-                <li class="rounded-md p-1"><strong>Functions for Manipulating Data in PostgreSQL</strong> (Issuing Body, Year)</li>
-                <li class="rounded-md p-1"><strong>Modernizing Data Lakes and Data Warehouses with GCP</strong> (Issuing Body, Year)</li>
-                <li class="rounded-md p-1"><strong>HR ANALYTICS</strong> (Issuing Body, Year)</li>
-                <li class="rounded-md p-1"><strong>Statistical Techniques for Business Forecasting (BF-02) using R</strong> (Issuing Body, Year)</li>
-            </ul>
+            <div class="certification-item rounded-md p-2">
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Skillsoft</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-700 leading-relaxed mb-2">
+                        <strong>Course Title:</strong> NLP for ML with Python: NLP Using Python & NLTK<br>
+                        <strong>Issued on:</strong> April 9, 2025
+                    </p>
+                    <a href="https://skillsoft.digitalbadges.skillsoft.com/2c3840ad-12c5-4c3f-80f9-8ce6651611cb#acc.ndg34PHV" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Applying Predictive Analytics<br>
+                        <strong>Issued on:</strong> February 20, 2025
+                    </p>
+                    <a href="https://skillsoft.digitalbadges.skillsoft.com/86985db8-ef0d-4c6c-bbc6-bbb6ef5e7071#acc.UGdJ5AZh" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Predictive Modeling: Predictive Analytics & Exploratory Data Analysis<br>
+                        <strong>Issued on:</strong> February 17, 2025
+                    </p>
+                    <a href="https://skillsoft.digitalbadges.skillsoft.com/299d5fa4-389a-4773-bb6a-6b7c2b212da8#acc.V3or5eD7" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Generative AI on GCP: Harnessing Generative AI with Vertex AI<br>
+                        <strong>Issued on:</strong> January 15, 2025
+                    </p>
+                    <a href="https://skillsoft.digitalbadges.skillsoft.com/702850fe-4f21-48db-8319-18f0cb24e757#acc.AlL4PsnM" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+                </div>
+            </div>
+
+            <div class="certification-item rounded-md p-2">
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Google Cloud</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details scrollable-content">
+                    <p class="text-gray-700 leading-relaxed mb-2">
+                        <strong>Course Title:</strong> Store, Process, and Manage Data on Google Cloud - Console Skill Badge<br>
+                        <strong>Issued on:</strong> February 6, 2025
+                    </p>
+                    <a href="https://www.credly.com/badges/18ce3a86-812b-4a15-9a4d-f83f989fdb58/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Streaming Analytics into BigQuery Skill Badge<br>
+                        <strong>Issued on:</strong> February 3, 2025
+                    </p>
+                    <a href="https://www.credly.com/badges/b08df8be-e7e4-4d60-8af6-659b78c86568/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Get Started with Dataplex Skill Badge<br>
+                        <strong>Issued on:</strong> January 22, 2025
+                    </p>
+                    <a href="https://www.credly.com/badges/51c2d986-dbb8-4830-b185-5edcd4a90b7b/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Introduction to Large Language Models<br>
+                        <strong>Issued on:</strong> January 2, 2025
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13479824?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Introduction to Responsible AI<br>
+                        <strong>Issued on:</strong> January 2, 2025
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13479865?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Machine Learning Operations (MLOps) for Generative AI<br>
+                        <strong>Issued on:</strong> January 18, 2025
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13606030?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Prompt Design in Vertex AI<br>
+                        <strong>Issued on:</strong> January 5, 2025
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13494589?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Responsible AI: Applying AI Principles with Google Cloud<br>
+                        <strong>Issued on:</strong> January 6, 2025
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13508431?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Tag and Discover BigLake Data<br>
+                        <strong>Issued on:</strong> January 28, 2025
+                    </p>
+                    <a href="https://www.credly.com/badges/70e629ed-beb9-47a1-bb1a-68879b09831d/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Introduction to Generative AI<br>
+                        <strong>Issued on:</strong> December 27, 2024
+                    </p>
+                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13436603?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
+                </div>
+            </div>
+
+            <div class="certification-item rounded-md p-2">
+                <div class="project-header" onclick="toggleProjectDetails(this)">
+                    <h3 class="text-xl font-semibold text-indigo-600">Indian Statistical Institution (ISI)</h3>
+                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="project-details">
+                    <p class="text-gray-700 leading-relaxed mb-2">
+                        <strong>Course Title:</strong> Statistical Techniques for Business Analytics using R<br>
+                        <strong>Credential ID:</strong> 2016/BA03/02<br>
+                        <strong>Issued on:</strong> November 2016
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Statistical Techniques for Business Forecasting (BF-02) using R<br>
+                        <strong>Credential ID:</strong> 2017/BF-02/32<br>
+                        <strong>Issued on:</strong> February 2017
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
+                        <strong>Course Title:</strong> Predictive Modeling using Python<br>
+                        <strong>Credential ID:</strong> 2018/PM-03/23<br>
+                        <strong>Issued on:</strong> February 2018
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- Footer -->
@@ -311,8 +444,8 @@
 
     <script>
         function toggleProjectDetails(headerElement) {
-            const projectItem = headerElement.closest('.project-item, .experience-item');
-            const detailsElement = projectItem.querySelector('.project-details');
+            const item = headerElement.closest('.project-item, .experience-item, .certification-item');
+            const detailsElement = item.querySelector('.project-details');
             const arrowIcon = headerElement.querySelector('.arrow-icon');
 
             if (detailsElement && arrowIcon) {
