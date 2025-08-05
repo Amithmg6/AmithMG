@@ -3,523 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amith Matadha Gurumallapal - Resume</title>
-    <!-- Load Tailwind CSS -->
+    <title>Interactive Resume | Amith Matadha Gurumallapal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Subtle Accents -->
+    <!-- Application Structure Plan: A single-page dashboard layout is chosen for its modern feel and ease of navigation. The structure includes a main header, a navigation bar that scrolls to sections, and distinct thematic areas: 'Overview' (for summary and key stats), 'Experience & Projects' (an interactive timeline), 'Skills' (with a dynamic chart), and 'Education & Certifications'. This non-linear structure allows users to jump to sections of interest, which is more user-friendly than a linear document. Interactions like tabbed content for projects and a filterable skills chart make the data exploration engaging and efficient. -->
+    <!-- Visualization & Content Choices: 
+        - Professional Summary -> Goal: Inform -> Presentation: Prominent text block -> Interaction: None -> Justification: Immediately establishes professional identity.
+        - Key Metrics (Years of Exp, Projects) -> Goal: Inform -> Presentation: KPI cards -> Interaction: Subtle hover effects -> Justification: Quickly highlights key career stats.
+        - Work Experience -> Goal: Show Change/Progression -> Presentation: Vertical Timeline (HTML/CSS) -> Interaction: Click to expand details -> Justification: Visually represents career growth over time.
+        - Projects -> Goal: Organize/Detail -> Presentation: Tabbed Cards within timeline entries -> Interaction: Click tabs to switch project details -> Justification: Neatly organizes extensive project details without cluttering the timeline.
+        - Skills -> Goal: Compare/Organize -> Presentation: Dynamic Doughnut Chart (Chart.js) & Tag Cloud -> Interaction: Hover to highlight, filter buttons -> Justification: Provides a quick visual summary of skill distribution and allows for interactive exploration.
+        - Education/Certs -> Goal: Inform -> Presentation: Simple list format -> Interaction: None -> Justification: Clear and straightforward presentation of credentials.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
-            color: #374151; /* Dark gray text */
+            background-color: #f8f7f4;
+            color: #4a4a4a;
         }
-        .section-title {
-            border-bottom: 2px solid #6366f1; /* Indigo border for section titles */
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
         }
-        .experience-item, .project-item, .certification-item { /* Added .certification-item */
-            border-left: 4px solid #a78bfa; /* Purple border for items */
-            padding-left: 1rem;
-            margin-bottom: 1.5rem;
+        .nav-link.active, .nav-link:hover {
+            color: #c084fc; /* purple-400 */
+            border-bottom-color: #c084fc;
         }
-        .bullet-point::before {
-            content: "• ";
-            color: #6366f1;
-            font-weight: bold;
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            background-color: #f8f7f4;
+            border: 4px solid #c084fc;
         }
-        .mosaic-item:hover {
-            transform: translateY(-2px); /* Slight lift on hover */
+        .project-tab.active {
+            background-color: #c084fc;
+            color: white;
         }
-
-        /* Styles for the collapsible project and experience details */
-        .project-header { /* Reused for certification headers as well */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
+        .skill-tag {
+            transition: all 0.2s ease-in-out;
         }
-        .arrow-icon {
-            transition: transform 0.3s ease;
+        .skill-tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .arrow-icon.rotated {
-            transform: rotate(90deg);
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 400px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px;
+            max-height: 400px;
         }
-        .project-details { /* Reused for experience and certification details as well */
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-        }
-        .project-details.expanded {
-            max-height: 500px; /* Default expanded height */
-            opacity: 1;
-            margin-top: 0.5rem; /* Add some space when expanded */
-        }
-        /* Specific styles for scrollable content when expanded */
-        .project-details.expanded.scrollable-content {
-            max-height: 300px; /* Lower max-height for scrollable content */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-right: 10px; /* Space for scrollbar */
+        @media (min-width: 768px) { 
+            .chart-container { 
+                height: 350px; 
+            } 
         }
     </style>
 </head>
-<body class="p-4 sm:p-8 md:p-12 lg:p-16">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-xl p-6 sm:p-8 md:p-10 lg:p-12">
+<body class="antialiased">
 
-        <!-- Header: Name and Contact Info -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 rounded-md">Amith Matadha Gurumallapal</h1>
-            <p class="text-lg sm:text-xl text-gray-600 mb-4">Bengaluru 560100</p>
-            <div class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 text-gray-700">
-                <a href="tel:+917090654400" class="flex items-center hover:text-indigo-500 transition duration-300 rounded-md">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                    +91-7090654400
-                </a>
-                <a href="mailto:amithds2017@gmail.com" class="flex items-center hover:text-indigo-500 transition duration-300 rounded-md">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
-                    amithds2017@gmail.com
-                </a>
-                <a href="https://linkedin.com/in/amithmg6" target="_blank" class="flex items-center hover:text-indigo-500 transition duration-300 rounded-md">
-                    LinkedIn
-                </a>
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-purple-600">Amith M.G.</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="nav-link border-b-2 border-transparent pb-1">Overview</a>
+                <a href="#experience" class="nav-link border-b-2 border-transparent pb-1">Experience</a>
+                <a href="#skills" class="nav-link border-b-2 border-transparent pb-1">Skills</a>
+                <a href="#education" class="nav-link border-b-2 border-transparent pb-1">Education</a>
             </div>
-        </header>
-
-        <!-- Summary Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">About Me</h2>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Data Science professional with 8 years of comprehensive experience since 2017, beginning my journey at Accenture. I bring a strong foundation across the entire data lifecycle, from EDA and time series forecasting to building classification models and managing ETL projects that deliver insightful reporting.
-            </p>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                My tech stack includes R, Python, and a deep understanding of Google Cloud Platform (BigQuery, Vertex AI, etc.). I've also led platform migrations and enjoy mentoring team members. A proactive initiative supporting a GCP helpline (50+ users) significantly sharpened my problem-solving and platform expertise.
-            </p>
-            <p class="text-gray-700 leading-relaxed">
-                With a Master's in AI & ML (2024) building on my Engineering degree (2017), I have evidenced professional growth, progressing to Senior Analyst in 2021 and further to TL/Specialist in 2024. Beyond professional achievements, I embrace a fulfilling personal life as a parent. A strong passion for continuous learning is evident through numerous certifications and trainings highlighted on my LinkedIn profile.
-            </p>
-        </section>
-
-        <!-- Experience Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Professional Journey So Far</h2>
-
-            <!-- Job 1: Data science analytics specialist -->
-            <div class="experience-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Data science analytics specialist</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600">Accenture in India | Karnataka, India | June 2024 – Present (1 year 2 months)</p>
-                    <p class="text-gray-700 leading-relaxed mt-2">
-                        As a Data Science Analytics Specialist, I am proficient in analyzing and resolving moderately complex data challenges. My approach involves developing innovative solutions, often by adapting and leveraging established methodologies. I am dedicated to understanding and contributing to the strategic objectives defined by senior management for our team.
-                        I collaborate primarily with my direct supervisor and engage effectively with peers and management, both within my organization and with clients. I consistently perform effectively under pressure, maintaining a steadfast commitment to quality and ensuring deadlines are met. While new assignments benefit from guidance, my decisions directly influence team outcomes. I possess the capability to manage small teams or lead individual work efforts, whether internally or for clients. I am highly adaptable and flexible, prepared to operate within rotational shifts as required, and I value expertise in cloud technologies.
-                    </p>
-                </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md p-2 text-gray-700">
+                    <option value="#overview">Overview</option>
+                    <option value="#experience">Experience</option>
+                    <option value="#skills">Skills</option>
+                    <option value="#education">Education</option>
+                </select>
             </div>
+        </nav>
+    </header>
 
-            <!-- Job 2: Data Science Analytics Sr Analyst -->
-            <div class="experience-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Data Science Analytics Sr Analyst</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | December 2021 – June 2024 (2 years 7 months)</p>
-                    <p class="text-700 leading-relaxed mt-2">
-                        As a Data Science Analytics Sr Analyst, I specialize in designing, analyzing, and developing machine learning models to address diverse business challenges across sectors such as retail, consumer goods, and manufacturing. I am committed to producing production-ready code, adhering strictly to coding standards, promoting code generalization, and implementing best development practices, fostering a culture of code discipline within the team. My expertise includes translating complex business requirements into precise analytical specifications.
-                        I play a senior role in projects, actively mentoring and reviewing the work of junior colleagues to ensure high standards. I take full ownership of both intermediate results and final outputs, prioritizing quality and timely delivery. I collaborate effectively with project leads to prepare comprehensive client and internal presentations.
-                        My technical proficiency is built on 3-5 years of experience with Machine Learning techniques, including Decision Trees, Gradient Boosting, and Random Forest. I possess extensive experience in data modeling gained through client projects, with a strong emphasis on data-driven techniques like exploratory data analysis and data pre-processing to solve real-world business problems. I am highly proficient in Python for data manipulation, visualization, and machine learning, with hands-on experience using libraries such as NumPy, Pandas, Matplotlib, and Scikit-learn. My skills also extend to SQL for data preparation, manipulation, and descriptive analysis, coupled with a solid understanding of statistical tests and distributions. I am adept at writing modular Python code and utilizing version control tools like Git. Furthermore, I have experience leveraging Google Cloud Platform (GCP) for data science workflows and am proficient in R programming for statistical analysis and data visualization.
-                        I am a strong learner, highly adaptable, and innovative, with a proven aptitude for analytics and problem-solving. I excel at leading data science projects while working collaboratively with junior team members. My communication skills are exceptional, enabling me to convey complex technical concepts clearly to business audiences. I am deeply committed to delighting customers, taking initiative, building trust, and fostering collaborative environments. My experience includes working effectively within global teams across different time zones and handling large datasets, often billions of rows. My background typically includes a Bachelor's or Master's degree in technology, engineering, or a quantitative field, with relevant coursework and professional certifications in Machine Learning.
-                    </p>
-                </div>
+    <main class="container mx-auto px-6 py-12">
+        
+        <!-- Overview Section -->
+        <section id="overview" class="mb-24 text-center">
+             <h1 class="text-5xl font-extrabold mb-4 text-gray-800">Data Science & Machine Learning Professional</h1>
+            <p class="text-lg max-w-4xl mx-auto text-gray-600 mb-8">
+                Data Science professional with 8 years of experience engineering and deploying robust Machine Learning (ML) and Natural Language Processing (NLP) solutions. Expertly applying Python and R to drive data engineering initiatives, optimize large-scale datasets, and deliver impactful insights through advanced analytics and Generative AI.
+            </p>
+            <div class="flex justify-center space-x-4 text-purple-600 mb-12">
+                <a href="mailto:amithmg6@gmail.com" class="hover:underline">amithmg6@gmail.com</a>
+                <span>|</span>
+                <a href="https://linkedin.com/in/amithmg6" target="_blank" class="hover:underline">LinkedIn</a>
+                <span>|</span>
+                <a href="https://github.com/Amithmg6" target="_blank" class="hover:underline">GitHub</a>
             </div>
-
-            <!-- Job 4: Analytics and modeling analyst -->
-            <div class="experience-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Analytics and modeling analyst</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-4xl font-bold text-purple-500">8+</h3>
+                    <p class="text-gray-500 mt-2">Years of Experience</p>
                 </div>
-                <div class="project-details">
-                    <p class="text-gray-600">Accenture in India | Bengaluru, Karnataka, India | March 2017 – December 2021 (4 years 10 months)</p>
+                <div class="bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-4xl font-bold text-purple-500">25M+</h3>
+                    <p class="text-gray-500 mt-2">Rows Processed in Gallup Project</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+                    <h3 class="text-4xl font-bold text-purple-500">9+</h3>
+                    <p class="text-gray-500 mt-2">Major Projects Delivered</p>
                 </div>
             </div>
         </section>
 
-        <!-- Education Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Academic Journey</h2>
-
-            <!-- Degree 1: MTech -->
-            <div class="mb-4 rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Master of Technology - MTech, Artificial Intelligence Analytics ML Big data</h3>
-                <p class="text-gray-600">PES University | October 2020 – April 2024</p>
-                <p class="text-gray-700">Focused on Artificial Intelligence, Machine Learning, Analytics, and Big Data concepts.</p>
-            </div>
-
-            <!-- Degree 2: BE -->
-            <div class="mb-4 rounded-md p-2">
-                <h3 class="text-xl font-semibold text-indigo-600">Bachelor of Engineering - BE, Electronics and Communications Engineering</h3>
-                <p class="text-gray-600">Visvesvaraya Technological University | 2012 – 2016</p>
+        <!-- Experience & Projects Section -->
+        <section id="experience" class="mb-24">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Professional Journey</h2>
+            <div class="relative border-l-4 border-purple-200 ml-12 pl-12">
+                <!-- Timeline items will be injected here by JavaScript -->
             </div>
         </section>
 
         <!-- Skills Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">My Arsenal</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-gray-700">
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">Top Skills:</h4>
-                    <p>Dataplex, Datamesh, Amazon VPC</p>
+        <section id="skills" class="mb-24">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Technical Skillset</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto text-gray-600 mb-12">A visual and categorized overview of my core competencies. Use the buttons to filter the chart and explore the skills cloud.</p>
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="w-full lg:w-1/2">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                    <div id="skill-filters" class="flex justify-center flex-wrap gap-2 mt-4">
+                        <!-- Filter buttons will be injected here -->
+                    </div>
                 </div>
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">Programming Languages:</h4>
-                    <p>R, Python, SQL</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">Cloud Platforms:</h4>
-                    <p>Google Cloud Platform (BigQuery, Vertex AI), AWS</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">Data & Analytics:</h4>
-                    <p>EDA, Time Series Forecasting, Classification Models, ETL, Insightful Reporting</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">AI/ML:</h4>
-                    <p>Artificial Intelligence, Machine Learning</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-gray-800 mb-1">Languages:</h4>
-                    <p>English (Full Professional), Kannada (Professional Working), Hindi (Elementary), Telugu (Elementary), Tamil (Elementary)</p>
+                <div id="skills-cloud" class="w-full lg:w-1/2 flex flex-wrap justify-center items-center gap-4 p-4 bg-white rounded-xl shadow-lg">
+                    <!-- Skill tags will be injected here -->
                 </div>
             </div>
         </section>
 
-        <!-- Certifications Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Professional Development</h2>
-            <div class="certification-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600" id="skillsoft-count">Skillsoft</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
+        <!-- Education & Certifications Section -->
+        <section id="education" class="mb-24">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Education & Certifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-600">Education</h3>
+                    <div id="education-list">
+                        <!-- Education items will be injected here -->
+                    </div>
                 </div>
-                <div class="project-details">
-                    <p class="text-gray-700 leading-relaxed mb-2">
-                        <strong>Course Title:</strong> NLP for ML with Python: NLP Using Python & NLTK<br>
-                        <strong>Issued on:</strong> April 9, 2025
-                    </p>
-                    <a href="https://skillsoft.digitalbadges.skillsoft.com/2c3840ad-12c5-4c3f-80f9-8ce6651611cb#acc.ndg34PHV" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Applying Predictive Analytics<br>
-                        <strong>Issued on:</strong> February 20, 2025
-                    </p>
-                    <a href="https://skillsoft.digitalbadges.skillsoft.com/86985db8-ef0d-4c6c-bbc6-bbc6ef5e7071#acc.UGdJ5AZh" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Predictive Modeling: Predictive Analytics & Exploratory Data Analysis<br>
-                        <strong>Issued on:</strong> February 17, 2025
-                    </p>
-                    <a href="https://skillsoft.digitalbadges.skillsoft.com/299d5fa4-389a-4773-bb6a-6b7c2b212da8#acc.V3or5eD7" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Generative AI on GCP: Harnessing Generative AI with Vertex AI<br>
-                        <strong>Issued on:</strong> January 15, 2025
-                    </p>
-                    <a href="https://skillsoft.digitalbadges.skillsoft.com/702850fe-4f21-48db-8319-18f0cb24e757#acc.AlL4PsnM" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-                </div>
-            </div>
-
-            <div class="certification-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600" id="google-cloud-count">Google Cloud</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details scrollable-content">
-                    <p class="text-gray-700 leading-relaxed mb-2">
-                        <strong>Course Title:</strong> Store, Process, and Manage Data on Google Cloud - Console Skill Badge<br>
-                        <strong>Issued on:</strong> February 6, 2025
-                    </p>
-                    <a href="https://www.credly.com/badges/18ce3a86-812b-4a15-9a4d-f83f989fdb58/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Streaming Analytics into BigQuery Skill Badge<br>
-                        <strong>Issued on:</strong> February 3, 2025
-                    </p>
-                    <a href="https://www.credly.com/badges/b08df8be-e7e4-4d60-8af6-659b78c86568/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Get Started with Dataplex Skill Badge<br>
-                        <strong>Issued on:</strong> January 22, 2025
-                    </p>
-                    <a href="https://www.credly.com/badges/51c2d986-dbb8-4830-b185-5edcd4a90b7b/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Introduction to Large Language Models<br>
-                        <strong>Issued on:</strong> January 2, 2025
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13479824?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Introduction to Responsible AI<br>
-                        <strong>Issued on:</strong> January 2, 2025
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13479865?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Machine Learning Operations (MLOps) for Generative AI<br>
-                        <strong>Issued on:</strong> January 18, 2025
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13606030?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Prompt Design in Vertex AI<br>
-                        <strong>Issued on:</strong> January 5, 2025
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13494589?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Responsible AI: Applying AI Principles with Google Cloud<br>
-                        <strong>Issued on:</strong> January 6, 2025
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13508431?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Tag and Discover BigLake Data<br>
-                        <strong>Issued on:</strong> January 28, 2025
-                    </p>
-                    <a href="https://www.credly.com/badges/70e629ed-beb9-47a1-bb1a-68879b09831d/linked_in_profile" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Introduction to Generative AI<br>
-                        <strong>Issued on:</strong> December 27, 2024
-                    </p>
-                    <a href="https://www.cloudskillsboost.google/public_profiles/a63220f5-1bfd-4404-b8c9-201612433b28/badges/13436603?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Credential</a>
-                </div>
-            </div>
-
-            <div class="certification-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600" id="isi-count">Indian Statistical Institution (ISI)</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-700 leading-relaxed mb-2">
-                        <strong>Course Title:</strong> Statistical Techniques for Business Analytics using R<br>
-                        <strong>Credential ID:</strong> 2016/BA03/02<br>
-                        <strong>Issued on:</strong> November 2016
-                    </p>
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Statistical Techniques for Business Forecasting (BF-02) using R<br>
-                        <strong>Credential ID:</strong> 2017/BF-02/32<br>
-                        <strong>Issued on:</strong> February 2017
-                    </p>
-                    <p class="text-gray-700 leading-relaxed mb-2 mt-4">
-                        <strong>Course Title:</strong> Predictive Modeling using Python<br>
-                        <strong>Credential ID:</strong> 2018/PM-03/23<br>
-                        <strong>Issued on:</strong> February 2018
-                    </p>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-600">Certifications</h3>
+                    <ul id="certifications-list" class="space-y-3">
+                        <!-- Certification items will be injected here -->
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Showcase</h2>
+    </main>
 
-            <!-- Project 1: Tweet Sentiment Analysis -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Tweet Sentiment Analysis: A Machine Learning Project</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: Python (NumPy, NLTK, Flask), HTML, CSS (Tailwind CSS), JavaScript, GitHub Pages, Render</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Developed a machine learning model to classify tweet sentiments (positive, negative, neutral) using a custom logistic regression. Achieved approximately 99.42% accuracy by implementing custom sigmoid, cost, and gradient descent functions, and rigorous data preprocessing. The project demonstrates robust sentiment assessment capabilities.
-                    </p>
-                    <a href="https://github.com/Amithmg6/tweet-sentiment-frontend" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
-                    <span class="mx-2 text-gray-400">|</span>
-                    <a href="https://amithmg6.github.io/tweet-sentiment-backend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
-                </div>
-            </div>
-
-            <!-- Project 2: Fake News Classifier Using NLP -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Fake News Classifier Using NLP</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: Python (re, pandas, seaborn, NLTK, Scikit-learn: TfidfVectorizer, CountVectorizer, train_test_split, MultinomialNB, RandomForestClassifier, KNeighborsClassifier, accuracy_score, confusion_matrix), pickle</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        The proliferation of fake news has become a significant societal challenge, influencing public opinion and eroding trust in media. This project aims to combat this issue by building a machine learning model, powered by Natural Language Processing (NLP), to classify news articles as "real" or "fake". By analyzing textual patterns, linguistic styles, and content characteristics, the model will learn to identify deceptive content, offering a crucial tool for media literacy and information verification.
-                    </p>
-                    <a href="https://github.com/Amithmg6/fake-news-classifier" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">GitHub Repo</a>
-                    <span class="mx-2 text-gray-400">|</span>
-                    <a href="https://amithmg6.github.io/fake-news-frontend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
-                </div>
-            </div>
-
-            <!-- New Project: Toxic comments classifier -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Toxic comments classifier</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: Python (Core Utilities: string, nlp_utils, contractions;Natural Language Processing (NLP): NLTK (stopwords, WordNetLemmatizer, PorterStemmer, LancasterStemmer, SnowballStemmer, word_tokenize, sent_tokenize, ngrams, bigrams, trigrams);Text Visualization: wordcloud (WordCloud, STOPWORDS, ImageColorGenerator);Image Processing: PIL (Image);Machine Learning (ML) & Data Science: scikit-learn (preprocessing, SelectFromModel, model_selection, metrics, linear_model, neighbors, naive_bayes, svm, ensemble, feature_extraction)</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Online platforms often struggle with the prevalence of toxic comments, which include anything from rude and disrespectful remarks to threats and identity attacks. This project addresses this challenge by developing a Natural Language Processing (NLP) model capable of classifying different types of toxicity in user comments. The goal is to build a robust system that can automatically identify and categorize toxic content, enabling platforms to better moderate discussions and foster healthier online communities.
-                    </p>
-                    <a href="https://amithmg6.github.io/toxic-txt-clssify-frontend/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">Know more</a>
-                </div>
-            </div>
-
-            <!-- New Project: Image to Speech tool -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Image to Speech tool</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: HTML, CSS (Tailwind CSS), JavaScript, Gemini API (Image Understanding, Text Generation)</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        This tool allows users to upload an image and have the Gemini API describe the image, then convert that description into speech. It demonstrates multimodal AI capabilities.
-                    </p>
-                    <a href="https://amithmg6.github.io/img-speech-tool-genai/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Tool</a>
-                </div>
-            </div>
-
-            <!-- New Project: Career Development Tool -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Career Development Tool</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: HTML, CSS (Tailwind CSS), JavaScript, Gemini API (Text Generation)</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        This tool leverages the Gemini API to provide personalized career development advice, including resume critiques, interview preparation tips, and skill enhancement suggestions.
-                    </p>
-                    <a href="https://amithmg6.github.io/cdt-genai/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Tool</a>
-                </div>
-            </div>
-
-            <!-- New Project: Automobile Sales Agent -->
-            <div class="project-item rounded-md p-2">
-                <div class="project-header" onclick="toggleProjectDetails(this)">
-                    <h3 class="text-xl font-semibold text-indigo-600">Automobile Sales Agent</h3>
-                    <svg class="w-5 h-5 ml-2 text-indigo-600 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </div>
-                <div class="project-details">
-                    <p class="text-gray-600 mb-1">Technologies: HTML, CSS (Tailwind CSS), JavaScript, Gemini API (Text Generation)</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        An interactive AI-powered automobile sales agent that assists users with car inquiries, provides recommendations, and answers questions about various car models and features.
-                    </p>
-                    <a href="https://amithmg6.github.io/Automobile-sales-agent/" target="_blank" class="text-indigo-500 hover:underline text-sm rounded-md">View Tool</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- New Section: Blogs and Websites -->
-        <section class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 section-title rounded-md">Blogs and Websites</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Blog/Website 1 -->
-                <a href="https://amithmg6.github.io/llm-comparisons-learning/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
-                    llm-comparisons-learning
-                </a>
-
-                <!-- Blog/Website 2 -->
-                <a href="https://amithmg6.github.io/AmithLanguageLab/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
-                    stemming-explorer
-                </a>
-
-                <!-- Blog/Website 3 -->
-                <a href="https://amithmg6.github.io/vecdb-learn/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
-                    Vector DBs
-                </a>
-
-                <!-- Blog/Website 4 -->
-                <a href="https://amithmg6.github.io/ml-explorer/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
-                    ML Algorithms Explorer
-                </a>
-
-                <!-- New Blog/Website -->
-                <a href="https://amithmg6.github.io/magic-cmds/" target="_blank" class="block p-4 bg-indigo-100 text-indigo-800 font-semibold text-center rounded-lg shadow-md hover:bg-indigo-200 hover:shadow-lg transition-all duration-300 mosaic-item">
-                    jupyter-magic-commands
-                </a>
-                
-                <!-- Add more <a> tags here for additional blogs/websites -->
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-500 text-sm mt-8">
-            <p>&copy; 2025 Amith Matadha Gurumallapal. All rights reserved.</p>
-        </footer>
-
-    </div>
+    <footer class="bg-gray-800 text-white text-center py-6">
+        <p>&copy; 2025 Amith Matadha Gurumallapal. All Rights Reserved.</p>
+    </footer>
 
     <script>
-        function toggleProjectDetails(headerElement) {
-            const item = headerElement.closest('.project-item, .experience-item, .certification-item');
-            const detailsElement = item.querySelector('.project-details');
-            const arrowIcon = headerElement.querySelector('.arrow-icon');
+        document.addEventListener('DOMContentLoaded', () => {
 
-            if (detailsElement && arrowIcon) {
-                detailsElement.classList.toggle('expanded');
-                arrowIcon.classList.toggle('rotated');
-            }
-        }
-
-        function updateCertificationCounts() {
-            const sections = [
-                { id: 'skillsoft-count', selector: '#skillsoft-count + svg + .project-details' },
-                { id: 'google-cloud-count', selector: '#google-cloud-count + svg + .project-details' },
-                { id: 'isi-count', selector: '#isi-count + svg + .project-details' }
+            const experienceData = [
+                {
+                    role: "Data Science Analytics Specialist",
+                    company: "Accenture in India",
+                    duration: "June 2024 – Present",
+                    location: "Karnataka, India",
+                    description: "Leading the NJX project, overseeing the end-to-end data analysis lifecycle from Python-based data engineering to hypothesis testing. Redesigned Power BI dashboards with newer metrics and integrated Generative AI for text summarization, which was highly received by leadership. Also providing critical GCP helpline support to 50+ users.",
+                    projects: [
+                        { name: "NJX Project", details: "Analyzed new joiner experiences, addressing leadership problem statements. Redesigned Power BI dashboards with newer metrics, performing correlation analysis and hypothesis testing through Python data engineering. Integrated Generative AI to summarize textual comments for dashboard display." },
+                    ]
+                },
+                {
+                    role: "Data Science Analytics Sr Analyst",
+                    company: "Accenture in India",
+                    duration: "December 2021 – June 2024",
+                    location: "Bengaluru, Karnataka, India",
+                    description: "Engineered and optimized data ingestion pipelines for the Gallup survey report, handling large-scale, dynamic datasets (1555+ columns, 25M+ rows). Gained extensive proficiency in GCP services and implemented CI/CD pipelines using Azure DevOps and Terraform. Translated complex analytical findings into actionable insights for senior leadership.",
+                    projects: [
+                        { name: "Gallup Report", details: "Spearheaded the data ingestion, processing, and validation for the Gallup survey report. This project involved handling exceptionally large and dynamic datasets by optimizing SQL queries, R programming, and Python code, providing crucial insights to leadership." },
+                    ]
+                },
+                {
+                    role: "Analytics and Modeling Analyst",
+                    company: "Accenture in India",
+                    duration: "March 2017 – December 2021",
+                    location: "Bengaluru, Karnataka, India",
+                    description: "Designed time series forecasting models for attrition, developed classification models for retention analysis, and engineered the Datamart project with a successful migration to GCP. Performed comprehensive EDA on diverse datasets and conducted R programming training for over 60 global audience members.",
+                    projects: [
+                        { name: "Datamart Project", details: "Designed and implemented a datamart to prepare analytics-ready datasets, processing approximately 40 datasets monthly. This ELT process was successfully migrated to Google Cloud Platform (GCP), showcasing strong capabilities in data engineering and governance." },
+                        { name: "Retention Analysis", details: "Explored and designed Machine Learning models, including Decision Tree and Random Forest, to classify attriters. Successfully designed a Random Forest model and identified key variables for retention." },
+                        { name: "Time Series Forecasting", details: "Developed models for unmanaged attrition forecasting using NNets and Kalman filter methods, preparing a final report visualized as a heatmap to indicate attrition risks." },
+                    ]
+                }
             ];
 
-            sections.forEach(section => {
-                const headerElement = document.getElementById(section.id);
-                const detailsElement = document.querySelector(section.selector);
-                if (headerElement && detailsElement) {
-                    const certificationEntries = detailsElement.querySelectorAll('p strong:first-child');
-                    const count = certificationEntries.length;
-                    headerElement.textContent = headerElement.textContent.split('(')[0].trim() + ` (${count})`;
-                }
-            });
-        }
+            const skillsData = {
+                'Programming & Tools': ['Python', 'R', 'SQL', 'Julia', 'Hive', 'Power BI', 'Git', 'Docker'],
+                'Cloud & DevOps': ['GCP', 'BigQuery', 'Vertex AI', 'AWS', 'Azure DevOps', 'Terraform', 'CI/CD'],
+                'Data Science & ML': ['EDA', 'Time Series', 'Classification', 'NLP', 'Generative AI', 'PyTorch', 'TensorFlow'],
+                'Data Engineering': ['ELT', 'Data Ingestion', 'Data Migration', 'Data Governance', 'Datamart']
+            };
 
-        // Call the function on page load
-        window.onload = updateCertificationCounts;
+            const educationData = [
+                {
+                    degree: "Master of Technology - MTech - Data Science and Machine Learning",
+                    university: "PES University, Bengaluru, Karnataka",
+                    year: "2024",
+                    details: "Thesis: Developed a pothole detection application by training YOLO model variants."
+                },
+                {
+                    degree: "Bachelor of Engineering - BE in Electronics and Communications Engineering",
+                    university: "Visvesvaraya Technological University, Bengaluru, Karnataka",
+                    year: "2016"
+                }
+            ];
+
+            const certificationsData = [
+                { name: "GenAI Certification for Managers & Tech Leaders", issuer: "E&ICT Academy, IIT Guwahati", year: "2025" },
+                { name: "Quantum Computing and Machine Learning", issuer: "IIT Delhi", year: "2022" },
+                { name: "Design Thinking and Innovation", issuer: "IISc", year: "2019" },
+                { name: "Computational Machine Learning", issuer: "IISc", year: "2019" },
+                { name: "Predictive Modeling using Python", issuer: "ISI", year: "2018" },
+                { name: "Machine Learning with R", issuer: "MSME", year: "2017" },
+            ];
+
+            // Populate Experience Timeline
+            const timelineContainer = document.querySelector('.relative.border-l-4');
+            experienceData.forEach((item, index) => {
+                const projectsHtml = item.projects.map((p, pIndex) => `
+                    <button class="project-tab text-sm px-3 py-1 rounded-full bg-gray-200 hover:bg-purple-300 transition-colors ${pIndex === 0 ? 'active' : ''}" data-target="project-${index}-${pIndex}">
+                        ${p.name}
+                    </button>
+                `).join('');
+
+                const projectDetailsHtml = item.projects.map((p, pIndex) => `
+                    <div id="project-${index}-${pIndex}" class="project-details mt-4 text-gray-600 ${pIndex !== 0 ? 'hidden' : ''}">
+                        <p>${p.details}</p>
+                    </div>
+                `).join('');
+
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item mb-12';
+                timelineItem.innerHTML = `
+                    <div class="bg-white p-6 rounded-xl shadow-lg relative">
+                        <h3 class="text-xl font-bold text-gray-800">${item.role}</h3>
+                        <p class="text-purple-500 font-semibold">${item.company} | ${item.duration}</p>
+                        <p class="text-sm text-gray-500 mb-4">${item.location}</p>
+                        <p class="text-gray-600 mb-6">${item.description}</p>
+                        <div class="border-t pt-4">
+                            <h4 class="font-semibold mb-3 text-gray-700">Key Projects:</h4>
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                ${projectsHtml}
+                            </div>
+                            ${projectDetailsHtml}
+                        </div>
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+            });
+            
+            // Project Tabs Logic
+            document.querySelectorAll('.project-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+                    const parent = tab.closest('.border-t');
+                    
+                    parent.querySelectorAll('.project-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    parent.querySelectorAll('.project-details').forEach(detail => detail.classList.add('hidden'));
+                    parent.querySelector(`#${targetId}`).classList.remove('hidden');
+                });
+            });
+
+
+            // Populate Skills Chart and Cloud
+            const skillsChartCanvas = document.getElementById('skillsChart').getContext('2d');
+            const skillsCloudContainer = document.getElementById('skills-cloud');
+            const skillFiltersContainer = document.getElementById('skill-filters');
+            let skillsChart;
+
+            const chartColors = {
+                'Programming & Tools': 'rgba(192, 132, 252, 0.8)', // purple-400
+                'Cloud & DevOps': 'rgba(129, 140, 248, 0.8)', // indigo-400
+                'Data Science & ML': 'rgba(96, 165, 250, 0.8)',  // blue-400
+                'Data Engineering': 'rgba(52, 211, 153, 0.8)'   // emerald-400
+            };
+
+            const chartHoverColors = {
+                'Programming & Tools': 'rgba(192, 132, 252, 1)',
+                'Cloud & DevOps': 'rgba(129, 140, 248, 1)',
+                'Data Science & ML': 'rgba(96, 165, 250, 1)',
+                'Data Engineering': 'rgba(52, 211, 153, 1)'
+            };
+            
+            const allSkills = Object.values(skillsData).flat();
+            const allCategories = Object.keys(skillsData);
+
+            function renderSkillsCloud(skillsToShow) {
+                skillsCloudContainer.innerHTML = '';
+                skillsToShow.forEach(skill => {
+                    const tag = document.createElement('span');
+                    tag.className = 'skill-tag bg-white text-purple-600 px-4 py-2 rounded-full shadow-md cursor-pointer';
+                    tag.textContent = skill;
+                    skillsCloudContainer.appendChild(tag);
+                });
+            }
+
+            function createChart(initialData) {
+                if (skillsChart) {
+                    skillsChart.destroy();
+                }
+                skillsChart = new Chart(skillsChartCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: initialData.labels,
+                        datasets: [{
+                            data: initialData.data,
+                            backgroundColor: initialData.colors,
+                            hoverBackgroundColor: initialData.hoverColors,
+                            borderColor: '#f8f7f4',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '60%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + ' skills';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChartAndCloud(category = 'All') {
+                let labels, data, colors, hoverColors, skillsToShow;
+
+                if (category === 'All') {
+                    labels = allCategories;
+                    data = allCategories.map(cat => skillsData[cat].length);
+                    colors = allCategories.map(cat => chartColors[cat]);
+                    hoverColors = allCategories.map(cat => chartHoverColors[cat]);
+                    skillsToShow = allSkills;
+                } else {
+                    labels = skillsData[category];
+                    data = Array(skillsData[category].length).fill(1); // Equal parts for skills in category
+                    colors = Array(skillsData[category].length).fill(chartColors[category]);
+                    hoverColors = Array(skillsData[category].length).fill(chartHoverColors[category]);
+                    skillsToShow = skillsData[category];
+                }
+                
+                createChart({ labels, data, colors, hoverColors });
+                renderSkillsCloud(skillsToShow);
+            }
+
+            // Create filter buttons
+            ['All', ...allCategories].forEach(cat => {
+                const button = document.createElement('button');
+                button.textContent = cat;
+                button.className = 'px-4 py-1 text-sm rounded-full transition-colors';
+                if (cat === 'All') {
+                    button.classList.add('bg-purple-500', 'text-white');
+                } else {
+                    button.classList.add('bg-gray-200', 'text-gray-700');
+                }
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('#skill-filters button').forEach(btn => {
+                        btn.classList.remove('bg-purple-500', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    button.classList.add('bg-purple-500', 'text-white');
+                    button.classList.remove('bg-gray-200', 'text-gray-700');
+                    updateChartAndCloud(cat);
+                });
+                skillFiltersContainer.appendChild(button);
+            });
+
+            updateChartAndCloud('All');
+
+            // Populate Education and Certifications
+            const educationList = document.getElementById('education-list');
+            educationData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'mb-6 pb-6 border-b border-gray-200 last:border-b-0';
+                div.innerHTML = `
+                    <h4 class="text-lg font-semibold text-gray-800">${item.degree}</h4>
+                    <p class="text-gray-600">${item.university}</p>
+                    <p class="text-sm text-gray-500">${item.year}</p>
+                    ${item.details ? `<p class="text-sm text-gray-500 mt-2">${item.details}</p>` : ''}
+                `;
+                educationList.appendChild(div);
+            });
+            
+            const certificationsList = document.getElementById('certifications-list');
+            certificationsData.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start';
+                li.innerHTML = `
+                    <span class="text-purple-500 mr-3 mt-1">&#10003;</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">${item.name}</p>
+                        <p class="text-sm text-gray-500">${item.issuer} - ${item.year}</p>
+                    </div>
+                `;
+                certificationsList.appendChild(li);
+            });
+
+            // Smooth Scrolling for Nav Links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Mobile Navigation
+            document.getElementById('mobile-nav').addEventListener('change', function(e) {
+                const targetId = e.target.value;
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Active Nav Link on Scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
